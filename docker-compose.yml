@@ -1,0 +1,26 @@
+version: '3.5'
+services:
+  ProductService:
+   image: ${DOCKER_REGISTRY-}producstmicroservice:v1
+   build:
+    context: ./ProductMicroservice
+    dockerfile: Dockerfile
+   environment: 
+    - ASPNETCORE_ENVIRONMENT=Development
+    - ASPNETCORE_HTTP_PORTS=8080
+    - ASPNETCORE_HTTPS_PORTS=8081
+    - CONNECTIONSTRINGS__DEFAULTCONNECTION=Data Source=192.168.1.117,1433;Initial Catalog=ProductServiceDB;User Id=sa;Password=MyPass@word;Integrated Security=False;Connect Timeout=30;Encrypt=False
+   ports:
+    - "4201:80"
+  UserService:
+   image: ${DOCKER_REGISTRY-}usersmicroservice:v1
+   build:
+    context: ./UserMicroservice
+    dockerfile: Dockerfile
+   environment: 
+    - ASPNETCORE_ENVIRONMENT=Development
+    - ASPNETCORE_HTTP_PORTS=8080
+    - ASPNETCORE_HTTPS_PORTS=8082
+    - CONNECTIONSTRINGS__DEFAULTCONNECTION=Data Source=192.168.1.117,1433;Initial Catalog=UserServiceDB;User Id=sa;Password=MyPass@word;Integrated Security=False;Connect Timeout=30;Encrypt=False
+   ports:
+    - "4202:80"
