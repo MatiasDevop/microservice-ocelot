@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.Logger.LogInformation("Entering ..............");
+app.Logger.LogInformation("Entering env");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
