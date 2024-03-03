@@ -270,3 +270,4 @@ D:\net dev\microservice-net\ProductMicroservice\obj\Debug\net8.0\refint\ProductM
 D:\net dev\microservice-net\ProductMicroservice\obj\Debug\net8.0\ProductMicroservice.pdb
 D:\net dev\microservice-net\ProductMicroservice\obj\Debug\net8.0\ProductMicroservice.genruntimeconfig.cache
 D:\net dev\microservice-net\ProductMicroservice\obj\Debug\net8.0\ref\ProductMicroservice.dll
+D:\net dev\microservice-net\ProductMicroservice\obj\Debug\net8.0\ProductMicroservice.sourcelink.json

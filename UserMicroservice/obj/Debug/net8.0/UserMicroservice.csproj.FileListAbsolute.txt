@@ -270,3 +270,4 @@ D:\net dev\microservice-net\UserMicroservice\obj\Debug\net8.0\refint\UserMicrose
 D:\net dev\microservice-net\UserMicroservice\obj\Debug\net8.0\UserMicroservice.pdb
 D:\net dev\microservice-net\UserMicroservice\obj\Debug\net8.0\UserMicroservice.genruntimeconfig.cache
 D:\net dev\microservice-net\UserMicroservice\obj\Debug\net8.0\ref\UserMicroservice.dll
+D:\net dev\microservice-net\UserMicroservice\obj\Debug\net8.0\UserMicroservice.sourcelink.json

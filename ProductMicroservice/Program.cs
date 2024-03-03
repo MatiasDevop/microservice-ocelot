@@ -18,8 +18,8 @@ var app = builder.Build();
 app.Logger.LogInformation("Entering ..............");
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseCors(builder =>
@@ -28,7 +28,7 @@ app.Logger.LogInformation("Entering ..............");
         builder.AllowAnyMethod();
         builder.AllowAnyHeader();
     });
-//}
+}
 app.Logger.LogInformation("After,,,,,,,,, ");
 
 
