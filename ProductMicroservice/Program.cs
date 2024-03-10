@@ -32,7 +32,7 @@ if (app.Environment.IsDevelopment())
 app.Logger.LogInformation("After,,,,,,,,, ");
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

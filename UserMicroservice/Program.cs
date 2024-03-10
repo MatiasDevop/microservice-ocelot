@@ -1,6 +1,7 @@
 using UserMicroservice.Services.Interface;
 using UserMicroservice.Services;
 using UserMicroservice.Data;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +14,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddHttpsRedirection(options =>
+//{
+//    options.HttpsPort = 443; // Specify your HTTPS port here
+//});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseCors(builder =>
@@ -26,7 +32,8 @@ if (app.Environment.IsDevelopment())
         builder.AllowAnyMethod();
         builder.AllowAnyHeader();
     });
-}
+//}
+
 
 app.UseHttpsRedirection();
 
