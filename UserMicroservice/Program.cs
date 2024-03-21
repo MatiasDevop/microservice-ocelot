@@ -1,7 +1,6 @@
 using UserMicroservice.Services.Interface;
 using UserMicroservice.Services;
 using UserMicroservice.Data;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +12,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-//builder.Services.AddHttpsRedirection(options =>
-//{
-//    options.HttpsPort = 443; // Specify your HTTPS port here
-//});
 
 var app = builder.Build();
 
@@ -34,6 +28,7 @@ var app = builder.Build();
     });
 //}
 
+app.Logger.LogInformation("testing for docker User Microservice");
 
 app.UseHttpsRedirection();
 

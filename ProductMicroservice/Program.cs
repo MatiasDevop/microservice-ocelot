@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
         builder.AllowAnyHeader();
     });
 }
-app.Logger.LogInformation("After,,,,,,,,, ");
+app.Logger.LogInformation("testing for docker Product Microservice");
 
 
 //app.UseHttpsRedirection();

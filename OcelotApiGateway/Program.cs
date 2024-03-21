@@ -25,6 +25,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.Logger.LogInformation("testing OCELOT proxy");
+
 app.UseCors("CORSPolicy");
 app.UseHttpsRedirection();
 app.UseAuthorization();
