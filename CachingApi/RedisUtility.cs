@@ -6,8 +6,14 @@ namespace CachingApi
     {
         public static ConnectionMultiplexer ConnectRedis(IConfiguration Configuration)
         {
-            var redisOptions = ConfigurationOptions.Parse($"{Configuration["Redis:localhost"]}:{Configuration["Redis:6379"]}");
-            //redisOptions.Password = Configuration["Redis:Password"];
+            var host = Configuration["Redis:Host"] ?? "localhost";
+            var port = Configuration["Redis:Port"] ?? "6379";
+            var redisOptions = ConfigurationOptions.Parse($"{host}:{port}");
+            var password = Configuration["Redis:Password"];
+            if (!string.IsNullOrEmpty(password))
+            {
+                redisOptions.Password = password;
+            }
             redisOptions.AbortOnConnectFail = false;
             var multiplexer = ConnectionMultiplexer.Connect(redisOptions);
             return multiplexer;

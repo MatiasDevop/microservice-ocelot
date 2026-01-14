@@ -1,22 +1,134 @@
-version: "3.5"
+version: "3.9"
+
 services:
-  ProductService:
-    image: ${DOCKER_REGISTRY-}producstmicroservice:v1
+  # SQL Server for Product and User microservices
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourStrong!Passw0rd", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # PostgreSQL for CachingApi
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=user_demo
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_DB=Sampledb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_demo"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Redis for CachingApi
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Product Microservice
+  productservice:
+    image: ${DOCKER_REGISTRY-}productmicroservice:v1
+    container_name: productservice
     build:
       context: ./ProductMicroservice
       dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Data Source=192.168.1.117,1433;Initial Catalog=ProductServiceDB;User Id=sa;Password=MyPass@word;Integrated Security=False;Connect Timeout=30;Encrypt=False
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ProductServiceDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=true;Connect Timeout=30
     ports:
       - "4201:8080"
-  UserService:
-    image: ${DOCKER_REGISTRY-}usersmicroservice:v1
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    restart: on-failure
+
+  # User Microservice
+  userservice:
+    image: ${DOCKER_REGISTRY-}usermicroservice:v1
+    container_name: userservice
     build:
       context: ./UserMicroservice
       dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - CONNECTIONSTRINGS__DEFAULTCONNECTION=Data Source=192.168.1.117,1433;Initial Catalog=UserServiceDB;User Id=sa;Password=MyPass@word;Integrated Security=False;Connect Timeout=30;Encrypt=False
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=UserServiceDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=true;Connect Timeout=30
     ports:
       - "4202:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    restart: on-failure
+
+  # Caching API (with PostgreSQL and Redis)
+  cachingapi:
+    image: ${DOCKER_REGISTRY-}cachingapi:v1
+    container_name: cachingapi
+    build:
+      context: ./CachingApi
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__SampleDbConnection=User ID=user_demo;Password=12345678;Server=postgres;Port=5432;Database=Sampledb;
+      - Redis__Host=redis
+      - Redis__Port=6379
+    ports:
+      - "4203:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: on-failure
+
+  # Ocelot API Gateway
+  ocelot:
+    image: ${DOCKER_REGISTRY-}ocelotgateway:v1
+    container_name: ocelot
+    build:
+      context: ./OcelotApiGateway
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "7130:8080"
+    depends_on:
+      - productservice
+      - userservice
+      - cachingapi
+    restart: on-failure
+
+volumes:
+  sqlserver_data:
+  postgres_data:
+  redis_data:
