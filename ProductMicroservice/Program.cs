@@ -33,6 +33,7 @@ app.UseCors(builder =>
 //}
 app.Logger.LogInformation("testing for docker Product Microservice");
 
+//app.Services.GetRequiredService<DbContextClass>().Database.Migrate();
 
 app.UseHttpsRedirection();
 

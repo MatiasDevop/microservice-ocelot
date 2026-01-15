@@ -1,0 +1,1 @@
+public record UserDto(string UserName, string Address);

@@ -13,9 +13,14 @@ namespace UserMicroservice.Services
             _dbContext = dbContext;
         }
 
-        public User AddUser(User product)
+        public User AddUser(UserDto product)
         {
-            var result = _dbContext.Users.Add(product);
+            var user = new User
+            {
+                UserName = product.UserName,
+                Address = product.Address
+            };
+            var result = _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
             return result.Entity;
         }

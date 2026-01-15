@@ -28,7 +28,7 @@ namespace UserMicroservice.Controllers
         }
 
         [HttpPost]
-        public User AddUser(User user)
+        public User AddUser(UserDto user)
         {
             return userService.AddUser(user);
         }
