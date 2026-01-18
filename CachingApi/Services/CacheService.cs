@@ -21,7 +21,7 @@ namespace CachingApi.Services
             var value = _cacheDb.StringGet(key);
             if (!string.IsNullOrEmpty(value))
             {
-                return JsonSerializer.Deserialize<T>(value);
+                return JsonSerializer.Deserialize<T>(value.ToString());
             }
             return default;// means a nullable type of that object
         }
