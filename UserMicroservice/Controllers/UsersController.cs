@@ -6,14 +6,8 @@ namespace UserMicroservice.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController(IUserService userService) : ControllerBase
     {
-        private readonly IUserService userService;
-        public UsersController(IUserService _userService)
-        {
-            userService = _userService;
-        }
-
         [HttpGet]
         public IEnumerable<User> UserList()
         {
